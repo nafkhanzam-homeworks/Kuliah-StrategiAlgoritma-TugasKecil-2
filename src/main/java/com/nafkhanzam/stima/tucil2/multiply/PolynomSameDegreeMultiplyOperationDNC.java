@@ -1,4 +1,4 @@
-package com.nafkhanzam.stima.tucil2.multiplysamedegree;
+package com.nafkhanzam.stima.tucil2.multiply;
 
 import com.nafkhanzam.stima.tucil2.Polynom;
 

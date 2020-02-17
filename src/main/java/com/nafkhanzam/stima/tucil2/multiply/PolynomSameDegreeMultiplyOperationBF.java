@@ -1,4 +1,4 @@
-package com.nafkhanzam.stima.tucil2.multiplysamedegree;
+package com.nafkhanzam.stima.tucil2.multiply;
 
 import com.nafkhanzam.stima.tucil2.Polynom;
 
@@ -10,10 +10,11 @@ public class PolynomSameDegreeMultiplyOperationBF extends BasePolynomSameDegreeM
 
     @Override
     public Polynom multiply() {
-        int[] res = new int[degree * 2 + 1];
-        for (int i = 0; i <= degree; ++i) {
-            for (int j = 0; j <= degree; ++j) {
-                res[i + j] = a.getCoef(i) * b.getCoef(j);
+        int degree = a.getMaxDegree() + b.getMaxDegree();
+        int[] res = new int[degree + 1];
+        for (int i = 0; i <= a.getMaxDegree(); ++i) {
+            for (int j = 0; j <= b.getMaxDegree(); ++j) {
+                res[i + j] += a.getCoef(i) * b.getCoef(j);
             }
         }
         return new Polynom(res);

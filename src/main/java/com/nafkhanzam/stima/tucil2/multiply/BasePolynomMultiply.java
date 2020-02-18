@@ -2,12 +2,13 @@ package com.nafkhanzam.stima.tucil2.multiply;
 
 import com.nafkhanzam.stima.tucil2.Polynom;
 
-public abstract class BasePolynomSameDegreeMultiplyOperation {
+public abstract class BasePolynomMultiply {
 
     protected Polynom a, b;
 
-    public BasePolynomSameDegreeMultiplyOperation(Polynom a, Polynom b) {
-        if (a.getMaxDegree() + b.getMaxDegree() < 0) {
+    public BasePolynomMultiply(Polynom a, Polynom b) {
+        int ad = a.getMaxDegree(), bd = b.getMaxDegree();
+        if (ad + bd < 0 && ad > 0 && bd > 0) {
             throw new RuntimeException("The polynoms' degree are too high that the multiply result will overflow!");
         }
         this.a = a;

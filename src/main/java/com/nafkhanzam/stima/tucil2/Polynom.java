@@ -5,34 +5,45 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.nafkhanzam.utils.Pair;
+import com.nafkhanzam.utils.PairInt;
 
 public class Polynom {
 
     private int[] arr;
 
+    public Polynom() {
+        this(new int[1]);
+    }
+
+    public Polynom(Polynom p) {
+        this(p.getArray());
+    }
+
     public Polynom(int[] arr) {
-        int lastIdx = 0;
-        for (int i = 0; i < arr.length; ++i) {
-            if (arr[i] != 0) {
-                lastIdx = i;
-            }
-        }
-        this.arr = Arrays.copyOf(arr, lastIdx + 1);
+        this.arr = arr;
     }
 
     public Polynom(String eq) {
-        List<Pair<Integer, Integer>> list = new ArrayList<>();
+        List<PairInt> list = new ArrayList<>();
         Integer max = null;
         for (String s : eq.replace(" ", "").replace("-", "+-").substring(eq.startsWith("-") ? 1 : 0).split("\\+")) {
-            Pair<Integer, Integer> p;
+            PairInt p;
             if (!s.contains("x")) {
-                p = Pair.of(0, Integer.valueOf(s));
+                p = new PairInt(0, Integer.valueOf(s));
             } else if (s.endsWith("x")) {
-                p = Pair.of(1, Integer.valueOf(s.replace("x", "")));
+                s = s.replace("x", "");
+                int value;
+                if (s.isEmpty()) {
+                    value = 1;
+                } else if (s.equals("-")) {
+                    value = -1;
+                } else {
+                    value = Integer.valueOf(s);
+                }
+                p = new PairInt(1, value);
             } else {
                 String[] pt = s.split("x\\^");
-                p = Pair.of(Integer.valueOf(pt[1]), pt[0].isEmpty() ? 1 : Integer.valueOf(pt[0]));
+                p = new PairInt(Integer.valueOf(pt[1]), pt[0].isEmpty() ? 1 : Integer.valueOf(pt[0]));
             }
             if (max == null || max < p.a) {
                 max = p.a;
@@ -43,7 +54,7 @@ public class Polynom {
             throw new RuntimeException("String is not valid as a polynomial!");
         }
         arr = new int[max + 1];
-        for (Pair<Integer, Integer> p : list) {
+        for (PairInt p : list) {
             arr[p.a] += p.b;
         }
     }
@@ -52,12 +63,55 @@ public class Polynom {
         return arr;
     }
 
+    public int getLength() {
+        return arr.length;
+    }
+
     public int getMaxDegree() {
-        return arr.length - 1;
+        int ans = 0;
+        for (int i = 1; i < arr.length; ++i) {
+            if (arr[i] != 0) {
+                ans = i;
+            }
+        }
+        return ans;
     }
 
     public int getCoef(int degree) {
         return arr[degree];
+    }
+
+    public Polynom makeLength(int newLength) {
+        return new Polynom(Arrays.copyOf(getArray(), newLength));
+    }
+
+    public Polynom getHalfPolynom(boolean halfLeft) {
+        int h = (getLength() - 1) / 2;
+        int from, to;
+        if (halfLeft) {
+            from = 0;
+            to = h + 1;
+        } else {
+            from = h + 1;
+            to = getLength();
+        }
+        return new Polynom(Arrays.copyOfRange(getArray(), from, to));
+    }
+
+    public Polynom multiplyDegree(int degree) {
+        int[] newArr = new int[getMaxDegree() + degree + 1];
+        for (int i = newArr.length - 1; i >= degree; --i) {
+            newArr[i] = arr[i - degree];
+        }
+        return new Polynom(newArr);
+    }
+
+    public Polynom add(Polynom p) {
+        int[] newArr = new int[Math.max(getMaxDegree(), p.getMaxDegree()) + 1];
+        for (int i = 0; i < newArr.length; ++i) {
+            newArr[i] = (i <= getMaxDegree() ? arr[i] : 0) + (i <= p.getMaxDegree() ? p.arr[i] : 0);
+        }
+        return new Polynom(newArr);
     }
 
     @Override
@@ -85,7 +139,7 @@ public class Polynom {
             }
             sb.append("x" + (i > 1 ? "^" + i : ""));
         }
-        return sb.toString();
+        return sb.length() == 0 ? "0" : sb.toString();
     }
 
     @Override
@@ -95,8 +149,17 @@ public class Polynom {
         if (!(o instanceof Polynom)) {
             return false;
         }
-        Polynom polynom = (Polynom) o;
-        return Arrays.equals(arr, polynom.arr);
+        Polynom p = (Polynom) o;
+        int n = getMaxDegree();
+        if (n != p.getMaxDegree()) {
+            return false;
+        }
+        for (int i = 0; i <= n; ++i) {
+            if (getCoef(i) != p.getCoef(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

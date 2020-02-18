@@ -2,9 +2,9 @@ package com.nafkhanzam.stima.tucil2.multiply;
 
 import com.nafkhanzam.stima.tucil2.Polynom;
 
-public class PolynomSameDegreeMultiplyOperationBF extends BasePolynomSameDegreeMultiplyOperation {
+public class PolynomMultiplyBF extends BasePolynomMultiply {
 
-    public PolynomSameDegreeMultiplyOperationBF(Polynom a, Polynom b) {
+    public PolynomMultiplyBF(Polynom a, Polynom b) {
         super(a, b);
     }
 

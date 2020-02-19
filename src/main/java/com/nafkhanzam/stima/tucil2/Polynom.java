@@ -114,6 +114,14 @@ public class Polynom {
         return new Polynom(newArr);
     }
 
+    public Polynom substract(Polynom p) {
+        int[] newArr = new int[Math.max(getMaxDegree(), p.getMaxDegree()) + 1];
+        for (int i = 0; i < newArr.length; ++i) {
+            newArr[i] = (i <= getMaxDegree() ? arr[i] : 0) - (i <= p.getMaxDegree() ? p.arr[i] : 0);
+        }
+        return new Polynom(newArr);
+    }
+
     @Override
     public String toString() {
         if (arr.length == 0) {

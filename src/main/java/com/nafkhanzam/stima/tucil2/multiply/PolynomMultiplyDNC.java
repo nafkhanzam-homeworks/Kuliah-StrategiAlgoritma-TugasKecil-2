@@ -30,11 +30,10 @@ public class PolynomMultiplyDNC extends BasePolynomMultiply {
         }
         Polynom a0 = p1.getHalfPolynom(true), a1 = p1.getHalfPolynom(false);
         Polynom b0 = p2.getHalfPolynom(true), b1 = p2.getHalfPolynom(false);
-        Polynom a0b0 = _calculate(a0, b0);
-        Polynom a0b1x = _calculate(a0, b1).multiplyDegree(n / 2);
-        Polynom a1b0x = _calculate(a1, b0).multiplyDegree(n / 2);
-        Polynom a1b1xx = _calculate(a1, b1).multiplyDegree(n);
-        return a0b0.add(a0b1x).add(a1b0x).add(a1b1xx);
+        Polynom y = _calculate(a0.add(a1), b0.add(b1));
+        Polynom u = _calculate(a0, b0);
+        Polynom z = _calculate(a1, b1);
+        return u.add(y.substract(u).substract(z).multiplyDegree(n / 2)).add(z.multiplyDegree(n / 2 * 2));
     }
 
 }
